@@ -1,12 +1,9 @@
 import React from "react";
 import { GlobalStyles } from "@ui/theme/GlobalStyles";
-import { json } from "stream/consumers";
-// import { todoController } from "@server/controller/todo";
 import { todoController } from "@ui/controller/todo";
 
 // const bg = "https://mariosouto.com/cursos/crudcomqualidade/bg";
-
-const bg = "/bg.jpg";
+const bg = "/bg.jpeg"; // inside public folder
 
 interface HomeTodo {
   id: string;
@@ -14,17 +11,19 @@ interface HomeTodo {
 }
 
 function HomePage() {
+  const [page, setPage] = React.useState(1);
   const [todos, setTodos] = React.useState<HomeTodo[]>([]);
 
+  // Load infos onload
   React.useEffect(() => {
-    todoController.get().then((todos) => {
+    todoController.get({ page }).then(({ todos }) => {
       setTodos(todos);
     });
   }, []);
 
   return (
     <main>
-      <GlobalStyles themeName="indigo" />
+      <GlobalStyles themeName="devsoutinho" />
       <header
         style={{
           backgroundImage: `url('${bg}')`,
@@ -71,36 +70,37 @@ function HomePage() {
                     <button data-type="delete">Apagar</button>
                   </td>
                 </tr>
-                // <tr>
-                //   <td colSpan={4} align="center" style={{ textAlign: "center" }}>
-                //     Carregando...
-                //   </td>
-                // </tr>
-
-                // <tr>
-                //   <td colSpan={4} align="center">
-                //     Nenhum item encontrado
-                //   </td>
-                // </tr>
-
-                // <tr>
-                //   <td colSpan={4} align="center" style={{ textAlign: "center" }}>
-                //     <button data-type="load-more">
-                //       Carregar mais{" "}
-                //       <span
-                //         style={{
-                //           display: "inline-block",
-                //           marginLeft: "4px",
-                //           fontSize: "1.2em",
-                //         }}
-                //       >
-                //         ↓
-                //       </span>
-                //     </button>
-                //   </td>
-                // </tr>
               );
             })}
+
+            {/* <tr>
+              <td colSpan={4} align="center" style={{ textAlign: "center" }}>
+                Carregando...
+              </td>
+            </tr> */}
+
+            {/* <tr>
+              <td colSpan={4} align="center">
+                Nenhum item encontrado
+              </td>
+            </tr> */}
+
+            <tr>
+              <td colSpan={4} align="center" style={{ textAlign: "center" }}>
+                <button data-type="load-more" onClick={() => setPage(page + 1)}>
+                  Página {page}, Carregar mais{" "}
+                  <span
+                    style={{
+                      display: "inline-block",
+                      marginLeft: "4px",
+                      fontSize: "1.2em",
+                    }}
+                  >
+                    ↓
+                  </span>
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </section>
